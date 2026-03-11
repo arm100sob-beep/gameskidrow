@@ -217,9 +217,10 @@ function AdminContent({ games, onSave, onBack }) {
     setModal(null);
   };
   const handleDelete = async () => {
-    onSave(games.filter(g=>g.id!==del.id));
-    await postAPI({ action: "delete", id: del.id });
+    const deletedId = del.id;
     setDel(null);
+    onSave(games.filter(g=>g.id!==deletedId));
+    postAPI({ action: "delete", id: deletedId });
   };
   const th = { padding:"10px 14px",textAlign:"left",fontSize:11,fontWeight:700,color:"#5a5f7a",textTransform:"uppercase",letterSpacing:"0.08em",borderBottom:"1px solid #1e2130" };
   const td = { padding:"12px 14px",color:"#c8cad8",fontSize:13,borderBottom:"1px solid #12141f",verticalAlign:"middle" };
