@@ -15,9 +15,13 @@ const fetchGames = async () => {
   return data.filter(g => g.id);
 };
 
-const postAPI = async (body) => {
-  const encoded = encodeURIComponent(JSON.stringify(body));
-  await fetch(API_URL + "?data=" + encoded);
+const postAPI = (body) => {
+  return new Promise((resolve) => {
+    const encoded = encodeURIComponent(JSON.stringify(body));
+    const img = new Image();
+    img.onload = img.onerror = () => resolve();
+    img.src = API_URL + "?data=" + encoded;
+  });
 };
 
 const Icon = ({ name }) => {
