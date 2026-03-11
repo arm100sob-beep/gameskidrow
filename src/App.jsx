@@ -20,7 +20,7 @@ const SEED_GAMES = [
 
 const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror"];
 const ITEMS_PER_PAGE = 20;
-const COLS = 5;
+const COLS = 4;
 
 const loadGames = () => {
   try { const r = localStorage.getItem("gd_games"); return r ? JSON.parse(r) : SEED_GAMES; }
@@ -115,7 +115,7 @@ function GameCard({ game, onView }) {
   return (
     <div onMouseEnter={()=>setHovered(true)} onMouseLeave={()=>setHovered(false)} onClick={()=>onView(game)}
       style={{ background:"#12141f",border:`1px solid ${hovered?"#7c3aed66":"#1e2130"}`,borderRadius:12,overflow:"hidden",cursor:"pointer",transition:"all 0.2s",transform:hovered?"translateY(-4px)":"none",boxShadow:hovered?"0 12px 40px rgba(124,58,237,0.25)":"none" }}>
-      <div style={{ position:"relative",aspectRatio:"16/10",overflow:"hidden" }}>
+      <div style={{ position:"relative",aspectRatio:"250/340",overflow:"hidden" }}>
         {game.image
           ? <img src={game.image} alt={game.title} style={{ width:"100%",height:"100%",objectFit:"cover",transition:"transform 0.3s",transform:hovered?"scale(1.06)":"scale(1)" }} />
           : <div style={{ width:"100%",height:"100%",background:"#1a1d2e",display:"flex",alignItems:"center",justifyContent:"center",color:"#3a3d55" }}><Icon name="image" /></div>}
