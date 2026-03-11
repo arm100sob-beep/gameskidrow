@@ -137,10 +137,10 @@ function DetailModal({ game, open, onClose, onIncView }) {
   return (
     <Modal open={true} onClose={onClose}>
       <button onClick={onClose} style={{ position:"absolute",top:16,right:16,background:"#1a1d27",border:"1px solid #2a2d3a",borderRadius:8,padding:"6px 10px",color:"#7c8099",cursor:"pointer" }}><Icon name="close" /></button>
-      {game.image && <img src={game.image} alt={game.title} style={{ width:"100%",height:200,objectFit:"cover",borderRadius:10,marginBottom:20 }} />}
+      {game.image && <img src={game.image} alt={game.title} style={{ width:"100%",maxHeight:400,objectFit:"contain",borderRadius:10,marginBottom:20,background:"#0a0b11" }} />}
       <div style={{ display:"inline-block",background:"#7c3aed22",color:"#a78bfa",fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:20,marginBottom:10 }}>{game.category}</div>
       <h2 style={{ margin:"0 0 10px",fontSize:22,color:"#e8eaf2",fontWeight:800 }}>{game.title}</h2>
-      <p style={{ color:"#9ca3c0",fontSize:14,lineHeight:1.7,margin:"0 0 20px" }}>{game.description}</p>
+      <p style={{ color:"#9ca3c0",fontSize:14,lineHeight:1.7,margin:"0 0 20px",whiteSpace:"pre-wrap" }}>{game.description}</p>
       <div style={{ display:"flex",alignItems:"center",gap:6,color:"#5a5f7a",fontSize:12,marginBottom:20 }}><Icon name="eye" />{(game.views||0).toLocaleString()} ครั้ง</div>
       {game.links && game.links.filter(l=>l.url).length > 0 && (
         <div>
