@@ -16,12 +16,8 @@ const fetchGames = async () => {
 };
 
 const postAPI = async (body) => {
-  await fetch(API_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify(body),
-  });
+  const params = new URLSearchParams({ data: JSON.stringify(body) });
+  await fetch(API_URL + "?" + params.toString());
 };
 
 const Icon = ({ name }) => {
