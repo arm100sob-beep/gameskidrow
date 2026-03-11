@@ -3,24 +3,35 @@ import React, { useState, useEffect } from "react";
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "028771131";
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwSJ9eryhWo-05a4vE2SIvl7UY-X9554PlL7070Y6qy_WV69v_yGLQKRv4jKNZzT5JE/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwPxYEU-hhUb_pn1UD5X0mSe4RvOSvGuadcKwsthB1IMs3tq74bts9f5IhnLceY0bgo/exec";
 
 const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror"];
 const ITEMS_PER_PAGE = 20;
 const COLS = 4;
 
-const fetchGames = async () => {
-  const res = await fetch(API_URL);
-  const data = await res.json();
-  return data.filter(g => g.id);
+const fetchGames = () => {
+  return new Promise((resolve, reject) => {
+    const cbName = "cb_" + Date.now();
+    const script = document.createElement("script");
+    window[cbName] = (data) => {
+      delete window[cbName];
+      document.body.removeChild(script);
+      resolve(Array.isArray(data) ? data.filter(g => g.id) : []);
+    };
+    script.onerror = () => { delete window[cbName]; reject(new Error("fetch failed")); };
+    script.src = API_URL + "?callback=" + cbName;
+    document.body.appendChild(script);
+  });
 };
 
 const postAPI = (body) => {
   return new Promise((resolve) => {
-    const encoded = encodeURIComponent(JSON.stringify(body));
-    const img = new Image();
-    img.onload = img.onerror = () => resolve();
-    img.src = API_URL + "?data=" + encoded;
+    const cbName = "cb_" + Date.now();
+    const script = document.createElement("script");
+    window[cbName] = () => { delete window[cbName]; document.body.removeChild(script); resolve(); };
+    script.onerror = () => { delete window[cbName]; resolve(); };
+    script.src = API_URL + "?callback=" + cbName + "&data=" + encodeURIComponent(JSON.stringify(body));
+    document.body.appendChild(script);
   });
 };
 
