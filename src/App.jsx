@@ -18,6 +18,8 @@ const fetchGames = async () => {
 const postAPI = async (body) => {
   await fetch(API_URL, {
     method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain" },
     body: JSON.stringify(body),
   });
 };
