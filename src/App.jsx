@@ -3,30 +3,24 @@ import React, { useState, useEffect } from "react";
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "028771131";
 
-const SEED_GAMES = [
-  { id: 1, title: "Cyberpunk Nexus", category: "RPG", image: "https://picsum.photos/seed/cyber/400/260", description: "เกม RPG โลกอนาคตที่คุณเลือกชะตาของตัวเอง สำรวจเมืองนีออนขนาดยักษ์พร้อมระบบ skill tree ที่ซับซ้อน", links: [{ label: "Google Drive", url: "#" }, { label: "Mega", url: "#" }], views: 9821, date: "2025-01-10" },
-  { id: 2, title: "Shadow Blade Origins", category: "Action", image: "https://picsum.photos/seed/shadow/400/260", description: "เกม action สุดมันส์ ต่อสู้กับศัตรูนับร้อยด้วยท่าคอมโบหลายร้อยแบบ", links: [{ label: "Google Drive", url: "#" }], views: 7543, date: "2025-01-15" },
-  { id: 3, title: "Starfall Chronicles", category: "RPG", image: "https://picsum.photos/seed/star/400/260", description: "ผจญภัยในอวกาศกับสหายรบของคุณ สร้างยานอวกาศและพิชิตจักรวาล", links: [{ label: "Mega", url: "#" }, { label: "MediaFire", url: "#" }], views: 6210, date: "2025-01-20" },
-  { id: 4, title: "Iron Fortress", category: "Strategy", image: "https://picsum.photos/seed/iron/400/260", description: "เกมวางแผนสร้างฐาน ป้องกันและโจมตีศัตรูด้วยกองทัพที่คุณสร้างขึ้น", links: [{ label: "Google Drive", url: "#" }], views: 5980, date: "2025-02-01" },
-  { id: 5, title: "Phantom Racer X", category: "Racing", image: "https://picsum.photos/seed/race/400/260", description: "แข่งรถสุดเร้าใจบนเส้นทางอันตรายทั่วโลก อัปเกรดรถและทะยานสู่อันดับ 1", links: [{ label: "Mega", url: "#" }], views: 5120, date: "2025-02-10" },
-  { id: 6, title: "Dark Harvest", category: "Horror", image: "https://picsum.photos/seed/dark/400/260", description: "เอาชีวิตรอดในคืนที่มืดมิด ค้นหาความจริงที่ซ่อนอยู่ในหมู่บ้านต้องสาป", links: [{ label: "Google Drive", url: "#" }, { label: "Mega", url: "#" }], views: 4890, date: "2025-02-15" },
-  { id: 7, title: "Neon Drift", category: "Racing", image: "https://picsum.photos/seed/neon/400/260", description: "แข่งรถในโลกนีออนสุดสวยงาม สัมผัสความเร็วและสีสันที่ไม่เหมือนใคร", links: [{ label: "MediaFire", url: "#" }], views: 3750, date: "2025-02-20" },
-  { id: 8, title: "Kingdom Fall", category: "Strategy", image: "https://picsum.photos/seed/king/400/260", description: "ปกครองอาณาจักรและนำพาประชาชนสู่ยุคทอง หรือจะพาไปสู่ความล่มสลาย", links: [{ label: "Google Drive", url: "#" }], views: 3210, date: "2025-03-01" },
-  { id: 9, title: "Void Walker", category: "Action", image: "https://picsum.photos/seed/void/400/260", description: "เดินทางระหว่างมิติต่างๆ ต่อสู้กับสิ่งมีชีวิตจากมิติอื่น", links: [{ label: "Mega", url: "#" }], views: 2980, date: "2025-03-05" },
-  { id: 10, title: "Pixel Warriors", category: "Action", image: "https://picsum.photos/seed/pixel/400/260", description: "เกม pixel art retro สุดน่ารัก แต่ความท้าทายระดับสูงมาก", links: [{ label: "Google Drive", url: "#" }, { label: "Mega", url: "#" }], views: 2540, date: "2025-03-08" },
-  { id: 11, title: "Abyssal Terror", category: "Horror", image: "https://picsum.photos/seed/abyss/400/260", description: "ดำดิ่งสู่ห้วงลึกของทะเล พบกับสิ่งลึกลับที่รอคุณอยู่", links: [{ label: "MediaFire", url: "#" }], views: 2100, date: "2025-03-10" },
-  { id: 12, title: "Galactic Conquest", category: "Strategy", image: "https://picsum.photos/seed/galactic/400/260", description: "พิชิตจักรวาลด้วยกองเรือของคุณ ทำสงครามกับอารยธรรมต่างดาว", links: [{ label: "Google Drive", url: "#" }], views: 1890, date: "2025-03-12" },
-];
+const API_URL = "https://script.google.com/macros/s/AKfycbxqMXtNAJ5GhzXknUlwkoVTwDpskA9XXftAbcBFNbKktV7j3vB4a0aoOcDzU_OaX-nC/exec";
 
 const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror"];
 const ITEMS_PER_PAGE = 20;
 const COLS = 4;
 
-const loadGames = () => {
-  try { const r = localStorage.getItem("gd_games"); return r ? JSON.parse(r) : SEED_GAMES; }
-  catch { return SEED_GAMES; }
+const fetchGames = async () => {
+  const res = await fetch(API_URL);
+  const data = await res.json();
+  return data.filter(g => g.id);
 };
-const saveGames = (g) => { try { localStorage.setItem("gd_games", JSON.stringify(g)); } catch {} };
+
+const postAPI = async (body) => {
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+};
 
 const Icon = ({ name }) => {
   const icons = {
@@ -210,12 +204,23 @@ function AdminContent({ games, onSave, onBack }) {
   const [del, setDel] = useState(null);
   const [search, setSearch] = useState("");
   const filtered = games.filter(g=>g.title.toLowerCase().includes(search.toLowerCase()));
-  const handleSave = (form) => {
-    if (modal === "add") { onSave([{...form,id:Date.now(),views:0,date:new Date().toISOString().split("T")[0]},...games]); }
-    else { onSave(games.map(g=>g.id===modal.id?{...g,...form}:g)); }
+  const handleSave = async (form) => {
+    if (modal === "add") {
+      const newGame = {...form, id: Date.now(), views: 0, date: new Date().toISOString().split("T")[0]};
+      onSave([newGame, ...games]);
+      await postAPI({ action: "add", game: newGame });
+    } else {
+      const updated = {...modal, ...form};
+      onSave(games.map(g=>g.id===modal.id ? updated : g));
+      await postAPI({ action: "update", game: updated });
+    }
     setModal(null);
   };
-  const handleDelete = () => { onSave(games.filter(g=>g.id!==del.id)); setDel(null); };
+  const handleDelete = async () => {
+    onSave(games.filter(g=>g.id!==del.id));
+    await postAPI({ action: "delete", id: del.id });
+    setDel(null);
+  };
   const th = { padding:"10px 14px",textAlign:"left",fontSize:11,fontWeight:700,color:"#5a5f7a",textTransform:"uppercase",letterSpacing:"0.08em",borderBottom:"1px solid #1e2130" };
   const td = { padding:"12px 14px",color:"#c8cad8",fontSize:13,borderBottom:"1px solid #12141f",verticalAlign:"middle" };
   return (
@@ -275,7 +280,8 @@ function AdminContent({ games, onSave, onBack }) {
 }
 
 export default function App() {
-  const [games, setGames] = useState(loadGames);
+  const [games, setGames] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [view, setView] = useState("home");
   const [category, setCategory] = useState("ทั้งหมด");
   const [page, setPage] = useState(1);
@@ -283,14 +289,29 @@ export default function App() {
 
   useEffect(() => { setPage(1); }, [category]);
 
-  const handleSaveGames = (updated) => { setGames(updated); saveGames(updated); };
-  const incView = (id) => { handleSaveGames(games.map(g=>g.id===id?{...g,views:(g.views||0)+1}:g)); };
+  useEffect(() => {
+    fetchGames().then(data => { setGames(data); setLoading(false); }).catch(() => setLoading(false));
+  }, []);
+
+  const handleSaveGames = (updated) => { setGames(updated); };
+  const incView = (id) => {
+    const game = games.find(g => g.id === id);
+    if (!game) return;
+    const updated = { ...game, views: (game.views || 0) + 1 };
+    setGames(games.map(g => g.id === id ? updated : g));
+    postAPI({ action: "update", game: updated });
+  };
   const filtered = category==="ทั้งหมด" ? games : games.filter(g=>g.category===category);
   const totalPages = Math.ceil(filtered.length/ITEMS_PER_PAGE);
   const paged = filtered.slice((page-1)*ITEMS_PER_PAGE, page*ITEMS_PER_PAGE);
   const top5 = [...games].sort((a,b)=>(b.views||0)-(a.views||0)).slice(0,5);
 
   if (view==="admin") return <AdminPanel games={games} onSave={handleSaveGames} onBack={()=>setView("home")} />;
+  if (loading) return (
+    <div style={{ minHeight:"100vh",background:"#0a0b11",display:"flex",alignItems:"center",justifyContent:"center",color:"#a78bfa",fontSize:18,fontFamily:"'Noto Sans Thai',sans-serif" }}>
+      ⏳ กำลังโหลด...
+    </div>
+  );
 
   return (
     <div style={{ minHeight:"100vh",background:"#0a0b11",color:"#e8eaf2",fontFamily:"'Noto Sans Thai','Sarabun',sans-serif" }}>
