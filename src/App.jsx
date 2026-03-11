@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "028771131";
 
-const API_URL = "https://script.google.com/macros/s/AKfycbz0H4WGJLhqTRJibpR0iqSVxBoHeFrsWlifXucbiHDskaAkeBXW_Gia1hrlfrdO3QKS/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwSJ9eryhWo-05a4vE2SIvl7UY-X9554PlL7070Y6qy_WV69v_yGLQKRv4jKNZzT5JE/exec";
 
 const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror"];
 const ITEMS_PER_PAGE = 20;
@@ -16,8 +16,8 @@ const fetchGames = async () => {
 };
 
 const postAPI = async (body) => {
-  const params = new URLSearchParams({ data: JSON.stringify(body) });
-  await fetch(API_URL + "?" + params.toString());
+  const encoded = encodeURIComponent(JSON.stringify(body));
+  await fetch(API_URL + "?data=" + encoded);
 };
 
 const Icon = ({ name }) => {
@@ -202,17 +202,18 @@ function AdminContent({ games, onSave, onBack }) {
   const [del, setDel] = useState(null);
   const [search, setSearch] = useState("");
   const filtered = games.filter(g=>g.title.toLowerCase().includes(search.toLowerCase()));
-  const handleSave = async (form) => {
-    if (modal === "add") {
+  const handleSave = (form) => {
+    const currentModal = modal;
+    setModal(null);
+    if (currentModal === "add") {
       const newGame = {...form, id: Date.now(), views: 0, date: new Date().toISOString().split("T")[0]};
       onSave([newGame, ...games]);
-      await postAPI({ action: "add", game: newGame });
+      postAPI({ action: "add", game: newGame });
     } else {
-      const updated = {...modal, ...form};
-      onSave(games.map(g=>g.id===modal.id ? updated : g));
-      await postAPI({ action: "update", game: updated });
+      const updated = {...currentModal, ...form};
+      onSave(games.map(g=>g.id===currentModal.id ? updated : g));
+      postAPI({ action: "update", game: updated });
     }
-    setModal(null);
   };
   const handleDelete = async () => {
     const deletedId = del.id;
