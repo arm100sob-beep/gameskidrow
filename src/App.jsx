@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "028771131";
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwPxYEU-hhUb_pn1UD5X0mSe4RvOSvGuadcKwsthB1IMs3tq74bts9f5IhnLceY0bgo/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzeOsmicAq4-PjjjlvCNpvxlFOYT2VBnhDnCFjwrv6Ao4X-mZck18EA-oMYJ4ib4NC4/exec";
 
 const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror"];
 const ITEMS_PER_PAGE = 20;
