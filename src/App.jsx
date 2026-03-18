@@ -3,9 +3,11 @@ import React, { useState, useEffect } from "react";
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "028771131";
 
+// API URL ของคุณ
 const API_URL = "https://script.google.com/macros/s/AKfycbwvWhA8GqKmJvYVLEW8ZBIpVVAK-_2hQHxx8vxTYMDCnB43-3vBNSe2K6AfHSVhKBhx/exec";
 
-const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror","Simulation"];
+// หมวดหมู่มี Simulation
+const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror", "Simulation"];
 const ITEMS_PER_PAGE = 20;
 const COLS = 4;
 
@@ -24,14 +26,17 @@ const fetchGames = () => {
   });
 };
 
+// ใช้ POST Method ป้องกันข้อความยาวเกินไป
 const postAPI = (body) => {
   return new Promise((resolve) => {
-    const cbName = "cb_" + Date.now();
-    const script = document.createElement("script");
-    window[cbName] = () => { delete window[cbName]; document.body.removeChild(script); resolve(); };
-    script.onerror = () => { delete window[cbName]; resolve(); };
-    script.src = API_URL + "?callback=" + cbName + "&data=" + encodeURIComponent(JSON.stringify(body));
-    document.body.appendChild(script);
+    fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(body)
+    })
+    .then(() => resolve())
+    .catch((err) => { console.error("Error:", err); resolve(); });
   });
 };
 
@@ -84,7 +89,7 @@ function GameForm({ initial, onSave, onCancel }) {
         <div>
           <label style={lbl}>หมวดหมู่</label>
           <select style={{...inp,cursor:"pointer"}} value={form.category} onChange={e=>setField("category",e.target.value)}>
-            {["Action","RPG","Strategy","Racing","Horror"].map(c=><option key={c}>{c}</option>)}
+            {["Action","RPG","Strategy","Racing","Horror","Simulation"].map(c=><option key={c}>{c}</option>)}
           </select>
         </div>
         <div>
@@ -341,24 +346,40 @@ export default function App() {
           <button onClick={()=>setView("admin")} style={{ display:"flex",alignItems:"center",gap:6,background:"#1a1d27",border:"1px solid #2a2d3a",borderRadius:8,padding:"7px 14px",color:"#a78bfa",cursor:"pointer",fontWeight:600,fontSize:13 }}><Icon name="admin" /> หลังบ้าน</button>
         </div>
       </div>
+      
       <div style={{ background:"linear-gradient(135deg,#0f1117 0%,#120d1f 50%,#0a0b11 100%)",padding:"40px 24px 32px",textAlign:"center",borderBottom:"1px solid #1a1d27",position:"relative",overflow:"hidden" }}>
         <div style={{ position:"absolute",inset:0,background:"radial-gradient(ellipse 60% 60% at 50% 0%,#7c3aed18 0%,transparent 70%)",pointerEvents:"none" }} />
         <h1 style={{ margin:"0 0 8px",fontSize:36,fontWeight:900,letterSpacing:"-0.03em",background:"linear-gradient(135deg,#c4b5fd,#818cf8)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent" }}>ดาวน์โหลดเกม</h1>
         <p style={{ margin:0,color:"#5a5f7a",fontSize:15 }}>รวมเกมคุณภาพ พร้อมลิงค์ดาวน์โหลดตรง</p>
       </div>
-      <div style={{ background:"#0f1117",borderBottom:"1px solid #1e2130",padding:"0 24px" }}>
+
+      {/* 🟢 โฆษณาจุดที่ 1: ใต้ Header เหนือแถบหมวดหมู่ 🟢 */}
+      <div style={{ maxWidth: 1440, margin: "24px auto 0", padding: "0 24px", textAlign: "center" }}>
+        <div style={{ width: "100%", maxWidth: "728px", height: "90px", background: "#1a1d27", margin: "0 auto", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#5a5f7a", border: "1px dashed #2a2d3a" }}>
+          <span style={{ fontSize: "10px", background: "#2a2d3a", padding: "2px 6px", borderRadius: "4px", marginBottom: "4px" }}>AD</span>
+          <span style={{ fontSize: "14px", fontWeight: "600" }}>พื้นที่โฆษณา (728x90) - จุดที่ 1</span>
+        </div>
+      </div>
+
+      <div style={{ background:"#0f1117",borderBottom:"1px solid #1e2130",padding:"0 24px", marginTop: "24px" }}>
         <div style={{ maxWidth:1440,margin:"0 auto",display:"flex",gap:2,overflowX:"auto" }}>
           {CATEGORIES.map(c=>(
             <button key={c} onClick={()=>setCategory(c)} style={{ padding:"14px 20px",background:"none",border:"none",borderBottom:`2px solid ${category===c?"#7c3aed":"transparent"}`,color:category===c?"#a78bfa":"#5a5f7a",cursor:"pointer",fontWeight:category===c?700:500,fontSize:14,whiteSpace:"nowrap",transition:"all 0.15s",fontFamily:"inherit" }}>{c}</button>
           ))}
         </div>
       </div>
+
       <div style={{ maxWidth:1440,margin:"0 auto",padding:"28px 24px",display:"grid",gridTemplateColumns:"1fr 240px",gap:28 }}>
         <div>
           <div style={{ display:"grid",gridTemplateColumns:`repeat(${COLS},1fr)`,gap:14,marginBottom:28 }}>
-            {paged.map(g=><GameCard key={g.id} game={g} onView={setDetail} />)}
+            
+            {paged.map((g) => (
+              <GameCard key={g.id} game={g} onView={setDetail} />
+            ))}
+
             {paged.length===0 && <div style={{ gridColumn:`1 / ${COLS+1}`,textAlign:"center",padding:60,color:"#3a3d55",fontSize:15 }}>ไม่พบเกมในหมวดนี้</div>}
           </div>
+          
           {totalPages>1 && (
             <div style={{ display:"flex",justifyContent:"center",gap:6,alignItems:"center" }}>
               <button onClick={()=>setPage(p=>Math.max(1,p-1))} disabled={page===1} style={{ padding:"8px 14px",background:"#12141f",border:"1px solid #2a2d3a",borderRadius:8,color:page===1?"#3a3d55":"#a78bfa",cursor:page===1?"default":"pointer",fontSize:13,fontFamily:"inherit" }}>‹ ก่อนหน้า</button>
@@ -370,6 +391,7 @@ export default function App() {
           )}
           <div style={{ textAlign:"center",marginTop:10,fontSize:12,color:"#3a3d55" }}>แสดง {paged.length} จาก {filtered.length} รายการ</div>
         </div>
+        
         <div>
           <div style={{ background:"#0f1117",border:"1px solid #1e2130",borderRadius:14,overflow:"hidden",position:"sticky",top:76 }}>
             <div style={{ padding:"14px 16px",borderBottom:"1px solid #1e2130",display:"flex",alignItems:"center",gap:8 }}>
@@ -394,6 +416,16 @@ export default function App() {
           </div>
         </div>
       </div>
+
+      {/* 🟢 โฆษณาจุดที่ 3: ท้ายสุดของหน้าเว็บ (Bottom) 🟢 */}
+      <div style={{ maxWidth: 1440, margin: "0 auto 40px", padding: "0 24px", textAlign: "center", clear: "both" }}>
+        <div style={{ width: "100%", maxWidth: "970px", height: "250px", background: "#1a1d27", margin: "0 auto", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#5a5f7a", border: "1px dashed #2a2d3a" }}>
+          <span style={{ fontSize: "10px", background: "#2a2d3a", padding: "2px 6px", borderRadius: "4px", marginBottom: "4px" }}>AD</span>
+          <span style={{ fontSize: "14px", fontWeight: "600" }}>พื้นที่โฆษณา (970x250) - จุดที่ 3</span>
+          <span style={{ fontSize: "12px", marginTop: "4px" }}>ท้ายเว็บ</span>
+        </div>
+      </div>
+
       <DetailModal game={detail} open={detail!==null} onClose={()=>setDetail(null)} onIncView={incView} />
     </div>
   );
