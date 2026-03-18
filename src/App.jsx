@@ -3,10 +3,8 @@ import React, { useState, useEffect } from "react";
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "028771131";
 
-// API URL ของคุณ
 const API_URL = "https://script.google.com/macros/s/AKfycbwvWhA8GqKmJvYVLEW8ZBIpVVAK-_2hQHxx8vxTYMDCnB43-3vBNSe2K6AfHSVhKBhx/exec";
 
-// หมวดหมู่มี Simulation
 const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror", "Simulation"];
 const ITEMS_PER_PAGE = 20;
 const COLS = 4;
@@ -26,7 +24,6 @@ const fetchGames = () => {
   });
 };
 
-// ใช้ POST Method ป้องกันข้อความยาวเกินไป
 const postAPI = (body) => {
   return new Promise((resolve) => {
     fetch(API_URL, {
@@ -355,10 +352,16 @@ export default function App() {
 
       {/* 🟢 โฆษณาจุดที่ 1: ใต้ Header เหนือแถบหมวดหมู่ 🟢 */}
       <div style={{ maxWidth: 1440, margin: "24px auto 0", padding: "0 24px", textAlign: "center" }}>
-        <div style={{ width: "100%", maxWidth: "728px", height: "90px", background: "#1a1d27", margin: "0 auto", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#5a5f7a", border: "1px dashed #2a2d3a" }}>
-          <span style={{ fontSize: "10px", background: "#2a2d3a", padding: "2px 6px", borderRadius: "4px", marginBottom: "4px" }}>AD</span>
-          <span style={{ fontSize: "14px", fontWeight: "600" }}>พื้นที่โฆษณา (728x90) - จุดที่ 1</span>
-        </div>
+        <a href="mailto:gameskidrow@proton.me" style={{ textDecoration: "none", display: "block", width: "100%", maxWidth: "728px", margin: "0 auto" }}>
+          <div 
+            onMouseEnter={e => { e.currentTarget.style.border = "1px solid #7c3aed"; e.currentTarget.style.background = "#12141f"; }}
+            onMouseLeave={e => { e.currentTarget.style.border = "1px dashed #2a2d3a"; e.currentTarget.style.background = "#1a1d27"; }}
+            style={{ width: "100%", height: "90px", background: "#1a1d27", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#5a5f7a", border: "1px dashed #2a2d3a", cursor: "pointer", transition: "all 0.2s" }}
+          >
+            <span style={{ fontSize: "10px", background: "#7c3aed22", color: "#a78bfa", padding: "2px 6px", borderRadius: "4px", marginBottom: "4px", fontWeight: "700" }}>AD</span>
+            <span style={{ fontSize: "15px", fontWeight: "700", color: "#e8eaf2" }}>พื้นที่โฆษณา สนใจติดต่อ คลิ๊ก!!!</span>
+          </div>
+        </a>
       </div>
 
       <div style={{ background:"#0f1117",borderBottom:"1px solid #1e2130",padding:"0 24px", marginTop: "24px" }}>
@@ -419,11 +422,16 @@ export default function App() {
 
       {/* 🟢 โฆษณาจุดที่ 3: ท้ายสุดของหน้าเว็บ (Bottom) 🟢 */}
       <div style={{ maxWidth: 1440, margin: "0 auto 40px", padding: "0 24px", textAlign: "center", clear: "both" }}>
-        <div style={{ width: "100%", maxWidth: "970px", height: "250px", background: "#1a1d27", margin: "0 auto", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#5a5f7a", border: "1px dashed #2a2d3a" }}>
-          <span style={{ fontSize: "10px", background: "#2a2d3a", padding: "2px 6px", borderRadius: "4px", marginBottom: "4px" }}>AD</span>
-          <span style={{ fontSize: "14px", fontWeight: "600" }}>พื้นที่โฆษณา (970x250) - จุดที่ 3</span>
-          <span style={{ fontSize: "12px", marginTop: "4px" }}>ท้ายเว็บ</span>
-        </div>
+        <a href="mailto:gameskidrow@proton.me" style={{ textDecoration: "none", display: "block", width: "100%", maxWidth: "728px", margin: "0 auto" }}>
+          <div 
+            onMouseEnter={e => { e.currentTarget.style.border = "1px solid #7c3aed"; e.currentTarget.style.background = "#12141f"; }}
+            onMouseLeave={e => { e.currentTarget.style.border = "1px dashed #2a2d3a"; e.currentTarget.style.background = "#1a1d27"; }}
+            style={{ width: "100%", height: "90px", background: "#1a1d27", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#5a5f7a", border: "1px dashed #2a2d3a", cursor: "pointer", transition: "all 0.2s" }}
+          >
+            <span style={{ fontSize: "10px", background: "#7c3aed22", color: "#a78bfa", padding: "2px 6px", borderRadius: "4px", marginBottom: "4px", fontWeight: "700" }}>AD</span>
+            <span style={{ fontSize: "15px", fontWeight: "700", color: "#e8eaf2" }}>พื้นที่โฆษณา สนใจติดต่อ คลิ๊ก!!!</span>
+          </div>
+        </a>
       </div>
 
       <DetailModal game={detail} open={detail!==null} onClose={()=>setDetail(null)} onIncView={incView} />
