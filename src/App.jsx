@@ -3,9 +3,9 @@ import React, { useState, useEffect } from "react";
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "028771131";
 
-const API_URL = "https://script.google.com/macros/s/AKfycbziy4rzKP5Qmva511fDQC8O32IFA3aYxPSSultPVjCEMrhWQvfwyvBavy3NLkDJq5rD/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwvWhA8GqKmJvYVLEW8ZBIpVVAK-_2hQHxx8vxTYMDCnB43-3vBNSe2K6AfHSVhKBhx/exec";
 
-const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror", "Simulation","Indie"];
+const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror", "Simulation"];
 const ITEMS_PER_PAGE = 20;
 const COLS = 4;
 
