@@ -5,7 +5,7 @@ const ADMIN_PASS = "028771131";
 
 const API_URL = "https://script.google.com/macros/s/AKfycbziy4rzKP5Qmva511fDQC8O32IFA3aYxPSSultPVjCEMrhWQvfwyvBavy3NLkDJq5rD/exec";
 
-const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror", "Simulation"];
+const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror", "Simulation","Indie"];
 const ITEMS_PER_PAGE = 20;
 const COLS = 4;
 
