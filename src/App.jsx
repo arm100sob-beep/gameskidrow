@@ -3,9 +3,10 @@ import React, { useState, useEffect } from "react";
 const ADMIN_USER = "admin";
 const ADMIN_PASS = "028771131";
 
-const API_URL = "https://script.google.com/macros/s/AKfycbwvWhA8GqKmJvYVLEW8ZBIpVVAK-_2hQHxx8vxTYMDCnB43-3vBNSe2K6AfHSVhKBhx/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbziy4rzKP5Qmva511fDQC8O32IFA3aYxPSSultPVjCEMrhWQvfwyvBavy3NLkDJq5rD/exec";
 
-const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror", "Simulation"];
+// 🟢 เพิ่มหมวด Indie ไว้แล้ว
+const CATEGORIES = ["ทั้งหมด", "Action", "RPG", "Strategy", "Racing", "Horror", "Simulation", "Indie"];
 const ITEMS_PER_PAGE = 20;
 const COLS = 4;
 
@@ -16,7 +17,8 @@ const fetchGames = () => {
     window[cbName] = (data) => {
       delete window[cbName];
       document.body.removeChild(script);
-      resolve(Array.isArray(data) ? data.filter(g => g.id) : []);
+      // 🟢 แก้ไข: ใส่ .reverse() เพื่อให้ข้อมูลล่าสุด (ท้าย Sheet) ขึ้นมาอยู่บนสุดเสมอ
+      resolve(Array.isArray(data) ? data.filter(g => g.id).reverse() : []);
     };
     script.onerror = () => { delete window[cbName]; reject(new Error("fetch failed")); };
     script.src = API_URL + "?callback=" + cbName;
@@ -86,7 +88,8 @@ function GameForm({ initial, onSave, onCancel }) {
         <div>
           <label style={lbl}>หมวดหมู่</label>
           <select style={{...inp,cursor:"pointer"}} value={form.category} onChange={e=>setField("category",e.target.value)}>
-            {["Action","RPG","Strategy","Racing","Horror","Simulation"].map(c=><option key={c}>{c}</option>)}
+            {/* 🟢 แก้ไข: ใช้ตัวแปร CATEGORIES หลัก โดยตัดคำว่า "ทั้งหมด" ออก จะได้ดึงหมวดใหม่ๆ มาโชว์อัตโนมัติ */}
+            {CATEGORIES.filter(c => c !== "ทั้งหมด").map(c => <option key={c}>{c}</option>)}
           </select>
         </div>
         <div>
@@ -219,11 +222,13 @@ function AdminContent({ games, onSave, onBack }) {
   const [del, setDel] = useState(null);
   const [search, setSearch] = useState("");
   const filtered = games.filter(g=>g.title.toLowerCase().includes(search.toLowerCase()));
+  
   const handleSave = (form) => {
     const currentModal = modal;
     setModal(null);
     if (currentModal === "add") {
       const newGame = {...form, id: Date.now(), views: 0, date: new Date().toISOString().split("T")[0]};
+      // เนื่องจากเราใช้ .reverse() ตอนโหลดข้อมูลแล้ว ตอนเพิ่มเกมใหม่เราเลยดันไปไว้ตำแหน่งแรก [newGame, ...games]
       onSave([newGame, ...games]);
       postAPI({ action: "add", game: newGame });
     } else {
@@ -232,12 +237,14 @@ function AdminContent({ games, onSave, onBack }) {
       postAPI({ action: "update", game: updated });
     }
   };
+  
   const handleDelete = async () => {
     const deletedId = del.id;
     setDel(null);
     onSave(games.filter(g=>g.id!==deletedId));
     postAPI({ action: "delete", id: deletedId });
   };
+  
   const th = { padding:"10px 14px",textAlign:"left",fontSize:11,fontWeight:700,color:"#5a5f7a",textTransform:"uppercase",letterSpacing:"0.08em",borderBottom:"1px solid #1e2130" };
   const td = { padding:"12px 14px",color:"#c8cad8",fontSize:13,borderBottom:"1px solid #12141f",verticalAlign:"middle" };
   return (
